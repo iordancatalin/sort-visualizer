@@ -1,0 +1,7 @@
+.header-container {
+  height: 50px;
+}
+
+.content-container {
+  height: calc(100% - 50px);
+}
