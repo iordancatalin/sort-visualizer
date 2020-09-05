@@ -81,11 +81,11 @@ code {
   width: 60px;
   border: 0;
   outline: none;
-  color: #fff;
   position: absolute;
   top: 50%;
   cursor: pointer;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 100px;
 }
 
 .settings-btn {
@@ -96,13 +96,8 @@ code {
   cursor: pointer;
 }
 
-.pipes-container {
-  border-bottom: 2px solid #d3d3d3;
-}
-
 .sort-algorithm-name {
   padding: 0.7rem 1rem;
-  color: #d3d3d3;
   text-align: center;
 }
 
