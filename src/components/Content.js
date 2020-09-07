@@ -1,18 +1,26 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import Pipe from './Pipe';
 import { StoreContext } from '../context/StoreContext';
 import { ThemeContext } from '../context/ThemeContext';
-import { generateRandomData } from '../util/util-functions';
 
 const Content = () => {
   const [currentTheme] = useContext(ThemeContext);
-  const [data, setData] = useContext(StoreContext);
+  const [data] = useContext(StoreContext);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => setData(generateRandomData(50)), []);
+  const getBgColorByStatus = (status) => {
+    switch (status) {
+      case 'MOVE_TO_LEFT': return 'red';
+      case 'MOVE_TO_RIGHT': return 'orange';
+      default: return currentTheme.colorPallet.third;
+    }
+  };
 
-  const pipeElements = data.map((height, index) => (
-    <Pipe height={height} key={index}></Pipe>
+  const pipeElements = data.map((data, index) => (
+    <Pipe
+      data={data}
+      key={index}
+      backgroundColor={getBgColorByStatus(data.status)}
+    ></Pipe>
   ));
 
   return (
@@ -22,6 +30,7 @@ const Content = () => {
     >
       <div style={{ minWidth: 300, minHeight: 500 }}>
         <div
+          className='position-relative'
           style={{
             borderBottom: `2px solid ${currentTheme.colorPallet.third}`,
           }}

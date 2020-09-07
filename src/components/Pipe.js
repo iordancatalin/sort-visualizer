@@ -1,11 +1,15 @@
-import React, { useContext } from 'react';
-import { ThemeContext } from '../context/ThemeContext';
+import React from 'react';
 
-const Pipe = ({ height }) => {
-  const [currentTheme] = useContext(ThemeContext);
-  const style = { backgroundColor: currentTheme.colorPallet.third, height };
+const Pipe = ({ data, backgroundColor }) => {
+  const style = { backgroundColor, height: data.value, left: data.offsetLeft };
 
-  return <div style={style} className='pipe'></div>;
+  return (
+    <div
+      style={style}
+      ref={data.refDOM}
+      className='pipe position-relative'
+    ></div>
+  );
 };
 
 export default Pipe;

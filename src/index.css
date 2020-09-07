@@ -106,4 +106,5 @@ code {
   display: inline-block;
   margin: 0px 5px 0px 5px;
   border-radius: 1px;
+  transition: left 0.3s ease-out;
 }
