@@ -1,11 +1,14 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Pipe from './Pipe';
-import { StoreContext } from '../context/StoreContext';
+import { StoreContext, GENERATE_DATA } from '../context/StoreContext';
 import { ThemeContext } from '../context/ThemeContext';
 
 const Content = () => {
   const [currentTheme] = useContext(ThemeContext);
-  const [data] = useContext(StoreContext);
+  const [data, dispatch] = useContext(StoreContext);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => dispatch({ type: GENERATE_DATA }), []);
 
   const getBgColorByStatus = (status) => {
     switch (status) {

@@ -1,12 +1,16 @@
 import React, { useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { StoreContext } from '../context/StoreContext';
+import {
+  StoreContext,
+  GENERATE_DATA,
+  INTERCHANGE,
+  RESET_STATUS,
+} from '../context/StoreContext';
 import { ThemeContext } from '../context/ThemeContext';
-import { generateRandomData, getRandomNumber } from '../util/util-functions';
 
 function Header() {
   const [currentTheme] = useContext(ThemeContext);
-  const [data, setData] = useContext(StoreContext);
+  const [data, dispatch] = useContext(StoreContext);
 
   const generateStyle = {
     backgroundColor: currentTheme.colorPallet.fourth,
@@ -20,92 +24,7 @@ function Header() {
   };
 
   const settingsStyle = { color: currentTheme.colorPallet.third };
-  const handleGenerateButton = () =>
-    setData(
-      Array(50)
-        .fill()
-        .map((value, index) => ({
-          value: getRandomNumber(),
-          offsetLeft: 0,
-          refDOM: React.createRef(),
-          status: 'NONE',
-          actualIndex: index,
-        }))
-    );
-
-  const resetStatusForIndexes = (indexOne, indexTwo) =>
-    setData((prevData) =>
-      prevData.map((value, index) => {
-        return { ...value, status: 'NONE' };
-      })
-    );
-
-  const calculateOffsetLeftAndStatusForTwoDatas = (dataOne, dataTwo) => {
-    const offsetLeftDOM1 = dataOne.refDOM.current.offsetLeft;
-    const offsetLeftDOM2 = dataTwo.refDOM.current.offsetLeft;
-
-    const diffAbsolute = Math.abs(offsetLeftDOM1 - offsetLeftDOM2);
-
-    if (offsetLeftDOM1 < offsetLeftDOM2) {
-      const resultOne = {
-        offsetLeft: dataOne.offsetLeft + diffAbsolute,
-        status: 'MOVE_TO_RIGHT',
-      };
-
-      const resultTwo = {
-        offsetLeft: dataTwo.offsetLeft - diffAbsolute,
-        status: 'MOVE_TO_LEFT',
-      };
-
-      return [resultOne, resultTwo];
-    }
-
-    const resultOne = {
-      offsetLeft: dataOne.offsetLeft - diffAbsolute,
-      status: 'MOVE_TO_LEFT',
-    };
-
-    const resultTwo = {
-      offsetLeft: dataTwo.offsetLeft + diffAbsolute,
-      status: 'MOVE_TO_RIGHT',
-    };
-
-    return [resultOne, resultTwo];
-  };
-
-  const interchange = (indexOne, indexTwo) => {
-    setData((prevData) => {
-      const data1 = prevData.find((value) => value.actualIndex === indexOne);
-      const data2 = prevData.find((value) => value.actualIndex === indexTwo);
-
-      const [result1, result2] = calculateOffsetLeftAndStatusForTwoDatas(
-        data1,
-        data2
-      );
-
-      return prevData.map((value) => {
-        if (value.actualIndex === indexOne) {
-          return {
-            ...value,
-            offsetLeft: result1.offsetLeft,
-            status: result1.status,
-            actualIndex: indexTwo,
-          };
-        }
-
-        if (value.actualIndex === indexTwo) {
-          return {
-            ...value,
-            offsetLeft: result2.offsetLeft,
-            status: result2.status,
-            actualIndex: indexOne,
-          };
-        }
-
-        return value;
-      });
-    });
-  };
+  const handleGenerateButton = () => dispatch({ type: GENERATE_DATA });
 
   const sort = () => {
     const results = [];
@@ -131,9 +50,13 @@ function Header() {
 
     const functions = results.map((result) => () =>
       new Promise((resolve, reject) => {
-        interchange(result.from, result.to);
+        dispatch({
+          type: INTERCHANGE,
+          indexOne: result.from,
+          indexTwo: result.to,
+        });
         setTimeout(() => {
-          resetStatusForIndexes(result.from, result.to);
+          dispatch({ type: RESET_STATUS });
           resolve(0);
         }, 400);
       })
