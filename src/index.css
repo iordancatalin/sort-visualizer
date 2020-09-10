@@ -108,3 +108,14 @@ code {
   border-radius: 1px;
   transition: left 0.3s ease-out;
 }
+
+.relief-btn:disabled {
+  background-color: rgb(105, 37, 75) !important;
+  box-shadow: none !important;
+  cursor: not-allowed;
+}
+
+.run-btn:disabled {
+  background-color: rgb(43, 102, 83) !important;
+  cursor: not-allowed;
+}

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   StoreContext,
@@ -11,6 +11,7 @@ import { ThemeContext } from '../context/ThemeContext';
 function Header() {
   const [currentTheme] = useContext(ThemeContext);
   const [data, dispatch] = useContext(StoreContext);
+  const [isRunning, setRunning] = useState(false);
 
   const generateStyle = {
     backgroundColor: currentTheme.colorPallet.fourth,
@@ -46,6 +47,8 @@ function Header() {
   };
 
   const handleRunButton = async () => {
+    setRunning(true);
+
     const results = sort();
 
     const functions = results.map((result) => () =>
@@ -65,6 +68,8 @@ function Header() {
     for (const funct of functions) {
       await funct();
     }
+
+    setRunning(false);
   };
 
   return (
@@ -77,13 +82,19 @@ function Header() {
           className='font-2d relief-btn'
           style={generateStyle}
           onClick={handleGenerateButton}
+          disabled={isRunning}
         >
           Generate
         </button>
       </div>
 
       <div className='h-100 d-inline-flex justify-content-center col-3 position-relative'>
-        <button className='run-btn' style={runStyle} onClick={handleRunButton}>
+        <button
+          className='run-btn'
+          style={runStyle}
+          onClick={handleRunButton}
+          disabled={isRunning}
+        >
           <FontAwesomeIcon icon='play' size='lg' />
         </button>
       </div>
